@@ -24,8 +24,8 @@ export function RecipeFiltersClient({
   categories,
 }: RecipeFiltersClientProps) {
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('');
-  const [selectedDifficulty, setSelectedDifficulty] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [selectedDifficulty, setSelectedDifficulty] = useState('all');
 
   // 필터링된 레시피 계산
   const filteredRecipes = useMemo(() => {
@@ -37,11 +37,17 @@ export function RecipeFiltersClient({
         return false;
       }
 
-      if (selectedCategory && recipe.category !== selectedCategory) {
+      if (
+        selectedCategory !== 'all' &&
+        recipe.category !== selectedCategory
+      ) {
         return false;
       }
 
-      if (selectedDifficulty && recipe.difficulty !== selectedDifficulty) {
+      if (
+        selectedDifficulty !== 'all' &&
+        recipe.difficulty !== selectedDifficulty
+      ) {
         return false;
       }
 
@@ -49,12 +55,12 @@ export function RecipeFiltersClient({
     });
   }, [recipes, searchQuery, selectedCategory, selectedDifficulty]);
 
-  const hasFilters = searchQuery || selectedCategory || selectedDifficulty;
+  const hasFilters = searchQuery || selectedCategory !== 'all' || selectedDifficulty !== 'all';
 
   const handleReset = () => {
     setSearchQuery('');
-    setSelectedCategory('');
-    setSelectedDifficulty('');
+    setSelectedCategory('all');
+    setSelectedDifficulty('all');
   };
 
   return (
@@ -81,7 +87,7 @@ export function RecipeFiltersClient({
               <SelectValue placeholder="카테고리" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">전체</SelectItem>
+              <SelectItem value="all">전체</SelectItem>
               {categories.map((cat) => (
                 <SelectItem key={cat} value={cat}>
                   {cat}
@@ -98,7 +104,7 @@ export function RecipeFiltersClient({
               <SelectValue placeholder="난이도" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">전체</SelectItem>
+              <SelectItem value="all">전체</SelectItem>
               <SelectItem value="easy">초급</SelectItem>
               <SelectItem value="medium">중급</SelectItem>
               <SelectItem value="hard">고급</SelectItem>
